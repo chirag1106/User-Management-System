@@ -20,7 +20,8 @@
                     <div class="col-lg-7 bg-white p-4">
                         <h1 class="text-center font-weight-bold text-primary">Sign in to Account</h1>
                         <hr class="my-3" />
-                        <form action="#" method="get" class="px-3" id="login-form">
+                        <form action="#" method="post" class="px-3" id="login-form">
+                            <div id="loginAlert"></div>
                             <div class="input-group input-group-lg form-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text rounded-0"><i class="far fa-envelope fa-lg fa-fw"></i></span>
@@ -89,13 +90,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text rounded-0"><i class="fas fa-key fa-lg fa-fw"></i></span>
                                 </div>
-                                <input type="password" id="rpassword" name="password" class="form-control rounded-0" minlength="5" placeholder="Password" required />
+                                <input type="password" id="rpassword" name="password" class="form-control rounded-0" minlength="5" placeholder="Password" autocomplete="off" required />
                             </div>
                             <div class="input-group input-group-lg form-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text rounded-0"><i class="fas fa-key fa-lg fa-fw"></i></span>
                                 </div>
-                                <input type="password" id="cpassword" name="cpassword" class="form-control rounded-0" minlength="5" placeholder="Confirm Password" required />
+                                <input type="password" id="cpassword" name="cpassword" class="form-control rounded-0" minlength="5" placeholder="Confirm Password" autocomplete="off" required />
                             </div>
                             <div class="form-group">
                                 <div id="passError" class="text-danger font-weight-bolder"></div>
@@ -157,6 +158,6 @@
 
     <!-- Custom Script -->
     <script src="./js/index.js"></script>
-    
+
 </body>
 </html>

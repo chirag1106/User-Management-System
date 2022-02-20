@@ -2,5 +2,9 @@
 
 session_start();
 
-echo $_SESSION['name'];
+require_once 'error.php';
+
+echo $_SESSION['userName'];
+
+
 ?>
