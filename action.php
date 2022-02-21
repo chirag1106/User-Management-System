@@ -13,7 +13,9 @@ if(isset($_POST['action']) && $_POST['action'] === 'register' && !empty($_POST['
     $name = $user->test_input($_POST['name']);
     $email = $user->test_input($_POST['email']);
     $password = $user->test_input($_POST['password']);
+
     $hashPass = password_hash($password,PASSWORD_DEFAULT);
+
     if($user->userExist($email))
     {
         echo $user->showMessage('warning','This E-mail is already registered!');
@@ -59,11 +61,42 @@ else if(isset($_POST['action']) && $_POST['action'] === 'login' && !empty($_POST
         }
     }
     else{
-        echo $user->showMessage('danger','You are not register! <br>Register yourself');
+        echo $user->showMessage('danger','You are not register! Register yourself');
     } 
+}
+// Handle AJAX forgot request
+else if(isset($_POST['action']) && $_POST['action'] === 'forgot' && !empty($_POST['action']))
+{
+    $email = $user->test_input($_POST['email']);
+    
+    $userFound = $user->currentUser($email);
+    if($userFound != NULL){
+        $token = md5(uniqid());
+        $token = str_shuffle($token);
+        $user->forgotPassword($token, $email);
 
-
-
+        try{
+            $subject = 'Reset Password';
+            $message = '<h3>Click the below link to reset your password <br>
+            <a href="http://localhost/chirag/User-Management-System/reset-pass.php?$email='.$email.'&token='.$token.'">Reset Password</a>
+            <br><br>Regards<br>Chirag Gupta</h3>';
+            $emailType = 'forgot';
+            $response = $user->sendEmail($subject, $email, $message, $emailType);
+            if($response == NULL)
+            {
+                echo $user->showMessage('success','Email sent successfully!');
+            }
+            else{
+                throw new Exception("Couldn't able to send email. Try again later!");
+            }
+        }
+        catch(Exception $e){
+            echo $user->showMessage('danger',$e->getMessage());
+        }
+    }
+    else{
+        echo $user->showMessage('danger','You are not register! Register yourself');
+    }
 }
 else{
     header('location:index.php');

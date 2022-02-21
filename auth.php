@@ -40,15 +40,88 @@ class Auth extends Database{
     }
 
     // Current user in session
-    public function currentUser($email, $name){
-        $sql = 'SELECT * FROM users WHERE email = :email && name = :name && deleted != 0';
+    public function currentUser($email){
+        $sql = 'SELECT * FROM users WHERE email = :email && deleted != 0';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':email',$email);
-        $stmt->bindParam(':name',$name);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result;
+    }
+
+    // Forgot Password
+    public function forgotPassword($token, $email){
+        $sql = "UPDATE users SET token = :token , token_expire = DATE_ADD(NOW(),INTERVAL 10 MINUTE) WHERE email = :email";
+        $stmt  = $this->con->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+
+        return true;
+    }
+
+    public function sendEmail($subject, $email, $message, $type){
+        $template = $this->emailTemplate($subject, $email, $message, $type);
+        $SENDGRID_API_KEY='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';
+        $url  = 'https://api.sendgrid.com/v3/mail/send';
+        $headers   = array(
+            "Authorization: Bearer $SENDGRID_API_KEY",
+            'Content-Type: application/json'
+        );
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $url );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($template) );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+    public function emailTemplate($subject, $email, $message, $type){
+        $my_email = 'chirag.webdeveloper123@gmail.com';
+        $my_name = 'Chirag Gupta';
+
+        $template = array();
+        if($type === 'forgot')
+        {
+            $template = array(
+                'personalizations' => array(
+                    array(
+                        'to' => array(
+                            array(
+                                 'email' => $email
+                            )
+                        )
+                    )
+                ),
+                'from' => array(
+                    'email' => $my_email,
+                    'name' => $my_name
+                ),
+                'subject' => $subject,
+                'content' => array(
+                     array(
+                        'type' => 'text/html',
+                        'value' => $message
+                    )
+                )
+            );
+        }
+        else{
+            $template = NULL;
+        } 
+
+        return $template; 
+    }
+
+    // Reset Password User Auth
+    public function resetPassword(){
+
     }
 }
 

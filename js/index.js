@@ -81,5 +81,25 @@ $(document).ready(function(){
     });
 
     // Forget AJAX request
-    
+    $('#forgot-btn').click(function(e){
+        if($('#forgot-form')[0].checkValidity()){
+            e.preventDefault();
+            $('#forgot-btn').val('Please wait...');
+            $.ajax({
+                url: 'action.php',
+                type : 'POST',
+                data : $('#forgot-form').serialize()+'&action=forgot',
+                success : function(response)
+                {
+                    $('#forgot-btn').val('Reset Password');
+                    $('#forgot-form')[0].reset();
+                    if(response != 'forgot')
+                    {
+                        $('#forgotAlert').html(response);   
+                    }
+                }
+            });
+        }
+    });
+
 });

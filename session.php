@@ -15,7 +15,7 @@ else{
     $cemail = $_SESSION['userEmail'];
     $cname = $_SESSION['userName'];
 
-    $data = $cuser->currentUser($cemail, $cname);
+    $data = $cuser->currentUser($cemail);
 
 }
 

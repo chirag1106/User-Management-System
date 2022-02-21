@@ -1,3 +1,14 @@
+<?php
+
+session_start();
+require_once 'error.php';
+
+if(isset($_SESSION['userEmail']) && isset($_SESSION['userName'])){
+    header('location: home.php');
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +24,7 @@
 </head>
 <body class="bg-info">
     <div class="container">
-        
+
         <!-- Login Form Start -->
         <div class="row justify-content-center wrapper" id="login-box">
             <div class="col-lg-10 my-auto myShadow">
