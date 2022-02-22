@@ -112,6 +112,30 @@ class Auth extends Database{
                 )
             );
         }
+        else if($type == 'resetPass'){
+            $template = array(
+                'personalizations' => array(
+                    array(
+                        'to' => array(
+                            array(
+                                 'email' => $email
+                            )
+                        )
+                    )
+                ),
+                'from' => array(
+                    'email' => $my_email,
+                    'name' => $my_name
+                ),
+                'subject' => $subject,
+                'content' => array(
+                     array(
+                        'type' => 'text/html',
+                        'value' => $message
+                    )
+                )
+            );
+        }
         else{
             $template = NULL;
         } 
@@ -120,8 +144,27 @@ class Auth extends Database{
     }
 
     // Reset Password User Auth
-    public function resetPassword(){
+    public function resetPassword($email, $token){
+        $sql = 'SELECT id FROM users WHERE email = :email && token = :token && token != "" && token_expire > NOW() && deleted != 0';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':email',$email);
+        $stmt->bindParam(':token',$token);
+        $stmt->execute();
 
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    // Update New Password
+    public function updatePassword($password, $email){
+        $sql = 'UPDATE users SET token = "" , password = :password WHERE email = :email && deleted != 0';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':password',$password);
+        $stmt->bindParam(':email',$email);
+        $stmt->execute();
+
+        return true;
     }
 }
 

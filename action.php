@@ -78,7 +78,7 @@ else if(isset($_POST['action']) && $_POST['action'] === 'forgot' && !empty($_POS
         try{
             $subject = 'Reset Password';
             $message = '<h3>Click the below link to reset your password <br>
-            <a href="http://localhost/chirag/User-Management-System/reset-pass.php?$email='.$email.'&token='.$token.'">Reset Password</a>
+            <a href="http://localhost/chirag/User-Management-System/reset-pass.php?email='.$email.'&token='.$token.'">Reset Password</a>
             <br><br>Regards<br>Chirag Gupta</h3>';
             $emailType = 'forgot';
             $response = $user->sendEmail($subject, $email, $message, $emailType);

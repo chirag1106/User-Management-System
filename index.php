@@ -15,7 +15,7 @@ if(isset($_SESSION['userEmail']) && isset($_SESSION['userName'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>System | HomePage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- Fontawesome CSS CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
@@ -81,7 +81,7 @@ if(isset($_SESSION['userEmail']) && isset($_SESSION['userName'])){
                         <p class="text-center font-weight-bolder text-light lead">To keep connected with us please login with your personal info.</p>
                         <button class="btn btn-outline-light btn-lg font-weight-bolder mt-4 align-self-center myLinkBtn" id="login-link">Sign In</button>
                     </div>
-                    <div class="col-lg-7 bg-white p-4" style="flex-grew:1.4;">
+                    <div class="col-lg-7 bg-white p-4" style="flex-grow:1.4;">
                         <h1 class="text-center font-weight-bold text-primary">Create Account</h1>
                         <hr class="my-3" />
                         <form action="#" method="post" class="px-3" id="register-form">

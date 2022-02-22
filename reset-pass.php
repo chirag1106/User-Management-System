@@ -1,9 +1,58 @@
 <?php
-session_start();
 
 require_once 'error.php';
+require_once 'auth.php';
 
-// echo 'hello';
+if(isset($_GET['email']) && !empty($_GET['email']) && isset($_GET['token']) && !empty($_GET['token'])){
+    $ruser = new Auth();
+
+    $email = $ruser->test_input($_GET['email']);
+    $token = $ruser->test_input($_GET['token']);
+
+    $auth_user = $ruser->resetPassword($email,$token);
+    $statusMsg = '';
+    if($auth_user != NULL){
+        if(isset($_POST['submit']) && !empty($_POST['password']) && !empty($_POST['cpassword'])){
+            $newPass = $ruser->test_input($_POST['password']);
+            $cnewPass = $ruser->test_input($_POST['cpassword']);
+
+            if($newPass == $cnewPass){
+                $hashPass = password_hash($newPass, PASSWORD_DEFAULT);
+                $ruser->updatePassword($hashPass,$email);
+                try{
+                    $subject = 'Change Password Request';
+                    $message = 'Password Change Successfully! <br> <a href="http://localhost/chirag/User-Management-System/index.php">Login Here</a><br><br>Regards<br>Chirag Gupta';
+                    $emailType = 'resetPass';
+                    $response = $ruser->sendEmail($subject,$email,$message,$emailType);
+                    if($response == NULL)
+                    {
+                        $statusMsg = $ruser->showMessage('success','Password reset successfully!');
+                    }
+                    else{
+                        throw new Exception("Couldn't able to send email. Try again later!");
+                    }
+                }
+                catch(Exception $e){
+                    $statusMsg = $ruser->showMessage('danger',$e->getMessage());
+                }
+            }
+            else{
+                $statusMsg = $ruser->showMessage('danger','Confirm Password did not match!');
+            }
+        }
+        else{
+            $statusMsg = $ruser->showMessage('danger','Fill Password Field first!');
+        }
+    }
+    else{
+       header('location: index.php');
+       exit();
+    }
+}
+else{
+    header('location: index.php');
+    exit();
+}
 
 ?>
 
@@ -34,6 +83,9 @@ require_once 'error.php';
                         <h1 class="text-center font-weight-bold text-primary rounded-right">Enter New Password!</h1>
                         <hr class="my-3" />
                         <form action="#" method="post" class="px-3">
+                            <div class="resetAlert">
+                                <?php echo $statusMsg; ?>
+                            </div>
                             <div class="input-group input-group-lg form-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text rounded-0"><i class="fas fa-key fa-lg fa-fw"></i></span>
@@ -67,7 +119,6 @@ require_once 'error.php';
 
     <!-- Font Awesome CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-
 
 </body>
 </html>
