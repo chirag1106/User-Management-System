@@ -63,7 +63,7 @@ class Auth extends Database{
 
     public function sendEmail($subject, $email, $message, $type){
         $template = $this->emailTemplate($subject, $email, $message, $type);
-        $SENDGRID_API_KEY='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';
+        $SENDGRID_API_KEY='';
         $url  = 'https://api.sendgrid.com/v3/mail/send';
         $headers   = array(
             "Authorization: Bearer $SENDGRID_API_KEY",
